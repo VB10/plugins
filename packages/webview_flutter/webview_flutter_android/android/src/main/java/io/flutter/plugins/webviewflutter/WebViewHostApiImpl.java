@@ -28,6 +28,11 @@ import java.util.Map;
  * <p>Handles creating {@link WebView}s that intercommunicate with a paired Dart object.
  */
 public class WebViewHostApiImpl implements WebViewHostApi {
+  // TODO(bparrishMines): This can be removed once pigeon supports null values: https://github.com/flutter/flutter/issues/59118
+  // Workaround to represent null Strings since pigeon doesn't support null
+  // values.
+  private static final String nullStringIdentifier = "<null-value>";
+
   private final InstanceManager instanceManager;
   private final WebViewProxy webViewProxy;
   // Only used with WebView using virtual displays.
@@ -350,7 +355,8 @@ public class WebViewHostApiImpl implements WebViewHostApi {
   @Override
   public void loadData(Long instanceId, String data, String mimeType, String encoding) {
     final WebView webView = (WebView) instanceManager.getInstance(instanceId);
-    webView.loadData(data, mimeType, encoding);
+    webView.loadData(
+        data, parseNullStringIdentifier(mimeType), parseNullStringIdentifier(encoding));
   }
 
   @Override
@@ -362,7 +368,12 @@ public class WebViewHostApiImpl implements WebViewHostApi {
       String encoding,
       String historyUrl) {
     final WebView webView = (WebView) instanceManager.getInstance(instanceId);
-    webView.loadDataWithBaseURL(baseUrl, data, mimeType, encoding, historyUrl);
+    webView.loadDataWithBaseURL(
+        parseNullStringIdentifier(baseUrl),
+        data,
+        parseNullStringIdentifier(mimeType),
+        parseNullStringIdentifier(encoding),
+        parseNullStringIdentifier(historyUrl));
   }
 
   @Override
@@ -380,7 +391,8 @@ public class WebViewHostApiImpl implements WebViewHostApi {
   @Override
   public String getUrl(Long instanceId) {
     final WebView webView = (WebView) instanceManager.getInstance(instanceId);
-    return webView.getUrl();
+    final String result = webView.getUrl();
+    return result != null ? result : nullStringIdentifier;
   }
 
   @Override
@@ -429,7 +441,8 @@ public class WebViewHostApiImpl implements WebViewHostApi {
   @Override
   public String getTitle(Long instanceId) {
     final WebView webView = (WebView) instanceManager.getInstance(instanceId);
-    return webView.getTitle();
+    final String result = webView.getTitle();
+    return result != null ? result : nullStringIdentifier;
   }
 
   @Override
@@ -499,5 +512,14 @@ public class WebViewHostApiImpl implements WebViewHostApi {
   public void setBackgroundColor(Long instanceId, Long color) {
     final WebView webView = (WebView) instanceManager.getInstance(instanceId);
     webView.setBackgroundColor(color.intValue());
+  }
+
+  @Nullable
+  private static String parseNullStringIdentifier(String value) {
+    if (value.equals(nullStringIdentifier)) {
+      return null;
+    }
+
+    return value;
   }
 }

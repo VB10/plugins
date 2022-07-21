@@ -13,8 +13,7 @@ import 'package:pigeon/pigeon.dart';
       'Use of this source code is governed by a BSD-style license that can be',
       'found in the LICENSE file.',
     ]),
-    javaOut:
-        'android/src/main/java/io/flutter/plugins/webviewflutter/GeneratedAndroidWebView.java',
+    javaOut: 'android/src/main/java/io/flutter/plugins/webviewflutter/GeneratedAndroidWebView.java',
     javaOptions: JavaOptions(
       package: 'io.flutter.plugins.webviewflutter',
       className: 'GeneratedAndroidWebView',
@@ -167,6 +166,8 @@ abstract class WebSettingsHostApi {
   void setBuiltInZoomControls(int instanceId, bool enabled);
 
   void setAllowFileAccess(int instanceId, bool enabled);
+
+  void setGeolocationEnabled(int instanceId, bool enabled);
 }
 
 @HostApi(dartHostTestHandler: 'TestJavaScriptChannelHostApi')

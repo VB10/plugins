@@ -28,8 +28,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
 
   final MethodChannel _channel;
 
-  static const MethodChannel _cookieManagerChannel =
-      MethodChannel('plugins.flutter.io/cookie_manager');
+  static const MethodChannel _cookieManagerChannel = MethodChannel('plugins.flutter.io/cookie_manager');
 
   Future<bool?> _onMethodCall(MethodCall call) async {
     switch (call.method) {
@@ -44,15 +43,13 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
           isForMainFrame: call.arguments['isForMainFrame']! as bool,
         );
       case 'onPageFinished':
-        _platformCallbacksHandler
-            .onPageFinished(call.arguments['url']! as String);
+        _platformCallbacksHandler.onPageFinished(call.arguments['url']! as String);
         return null;
       case 'onProgress':
         _platformCallbacksHandler.onProgress(call.arguments['progress'] as int);
         return null;
       case 'onPageStarted':
-        _platformCallbacksHandler
-            .onPageStarted(call.arguments['url']! as String);
+        _platformCallbacksHandler.onPageStarted(call.arguments['url']! as String);
         return null;
       case 'onWebResourceError':
         _platformCallbacksHandler.onWebResourceError(
@@ -66,8 +63,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
                 ? null
                 : WebResourceErrorType.values.firstWhere(
                     (WebResourceErrorType type) {
-                      return type.toString() ==
-                          '$WebResourceErrorType.${call.arguments['errorType']}';
+                      return type.toString() == '$WebResourceErrorType.${call.arguments['errorType']}';
                     },
                   ),
           ),
@@ -146,13 +142,10 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   Future<String?> currentUrl() => _channel.invokeMethod<String>('currentUrl');
 
   @override
-  Future<bool> canGoBack() =>
-      _channel.invokeMethod<bool>('canGoBack').then((bool? result) => result!);
+  Future<bool> canGoBack() => _channel.invokeMethod<bool>('canGoBack').then((bool? result) => result!);
 
   @override
-  Future<bool> canGoForward() => _channel
-      .invokeMethod<bool>('canGoForward')
-      .then((bool? result) => result!);
+  Future<bool> canGoForward() => _channel.invokeMethod<bool>('canGoForward').then((bool? result) => result!);
 
   @override
   Future<void> goBack() => _channel.invokeMethod<void>('goBack');
@@ -176,9 +169,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
 
   @override
   Future<String> evaluateJavascript(String javascript) {
-    return _channel
-        .invokeMethod<String>('evaluateJavascript', javascript)
-        .then((String? result) => result!);
+    return _channel.invokeMethod<String>('evaluateJavascript', javascript).then((String? result) => result!);
   }
 
   @override
@@ -188,21 +179,17 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
 
   @override
   Future<String> runJavascriptReturningResult(String javascript) {
-    return _channel
-        .invokeMethod<String>('runJavascriptReturningResult', javascript)
-        .then((String? result) => result!);
+    return _channel.invokeMethod<String>('runJavascriptReturningResult', javascript).then((String? result) => result!);
   }
 
   @override
   Future<void> addJavascriptChannels(Set<String> javascriptChannelNames) {
-    return _channel.invokeMethod<void>(
-        'addJavascriptChannels', javascriptChannelNames.toList());
+    return _channel.invokeMethod<void>('addJavascriptChannels', javascriptChannelNames.toList());
   }
 
   @override
   Future<void> removeJavascriptChannels(Set<String> javascriptChannelNames) {
-    return _channel.invokeMethod<void>(
-        'removeJavascriptChannels', javascriptChannelNames.toList());
+    return _channel.invokeMethod<void>('removeJavascriptChannels', javascriptChannelNames.toList());
   }
 
   @override
@@ -225,24 +212,19 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<int> getScrollX() =>
-      _channel.invokeMethod<int>('getScrollX').then((int? result) => result!);
+  Future<int> getScrollX() => _channel.invokeMethod<int>('getScrollX').then((int? result) => result!);
 
   @override
-  Future<int> getScrollY() =>
-      _channel.invokeMethod<int>('getScrollY').then((int? result) => result!);
+  Future<int> getScrollY() => _channel.invokeMethod<int>('getScrollY').then((int? result) => result!);
 
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
-    return _cookieManagerChannel
-        .invokeMethod<bool>('clearCookies')
-        .then<bool>((dynamic result) => result! as bool);
+    return _cookieManagerChannel.invokeMethod<bool>('clearCookies').then<bool>((dynamic result) => result! as bool);
   }
 
   /// Method channel implementation for [WebViewPlatform.setCookie].
   static Future<void> setCookie(WebViewCookie cookie) {
-    return _cookieManagerChannel.invokeMethod<void>(
-        'setCookie', cookie.toJson());
+    return _cookieManagerChannel.invokeMethod<void>('setCookie', cookie.toJson());
   }
 
   static Map<String, dynamic> _webSettingsToMap(WebSettings? settings) {
@@ -265,12 +247,12 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
     _addIfNonNull('hasNavigationDelegate', settings.hasNavigationDelegate);
     _addIfNonNull('hasProgressTracking', settings.hasProgressTracking);
     _addIfNonNull('debuggingEnabled', settings.debuggingEnabled);
-    _addIfNonNull(
-        'gestureNavigationEnabled', settings.gestureNavigationEnabled);
-    _addIfNonNull(
-        'allowsInlineMediaPlayback', settings.allowsInlineMediaPlayback);
+    _addIfNonNull('gestureNavigationEnabled', settings.gestureNavigationEnabled);
+    _addIfNonNull('allowsInlineMediaPlayback', settings.allowsInlineMediaPlayback);
     _addSettingIfPresent('userAgent', settings.userAgent);
     _addIfNonNull('zoomEnabled', settings.zoomEnabled);
+    _addIfNonNull('geolocationEnabled', settings.geolocationEnabled);
+
     return map;
   }
 
@@ -290,9 +272,7 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       'autoMediaPlaybackPolicy': creationParams.autoMediaPlaybackPolicy.index,
       'usesHybridComposition': usesHybridComposition,
       'backgroundColor': creationParams.backgroundColor?.value,
-      'cookies': creationParams.cookies
-          .map((WebViewCookie cookie) => cookie.toJson())
-          .toList()
+      'cookies': creationParams.cookies.map((WebViewCookie cookie) => cookie.toJson()).toList()
     };
   }
 }

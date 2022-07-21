@@ -56,9 +56,7 @@ class WebSetting<T> {
       return false;
     }
 
-    return other is WebSetting<T> &&
-        other.isPresent == isPresent &&
-        other._value == _value;
+    return other is WebSetting<T> && other.isPresent == isPresent && other._value == _value;
   }
 
   @override
@@ -85,6 +83,7 @@ class WebSettings {
     this.allowsInlineMediaPlayback,
     this.zoomEnabled,
     required this.userAgent,
+    this.geolocationEnabled,
   }) : assert(userAgent != null);
 
   /// The JavaScript execution mode to be used by the webview.
@@ -124,6 +123,9 @@ class WebSettings {
   ///
   /// See also: [WebView.gestureNavigationEnabled]
   final bool? gestureNavigationEnabled;
+
+  /// See also: [WebView.geolocationEnabled]
+  final bool? geolocationEnabled;
 
   @override
   String toString() {

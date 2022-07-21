@@ -11,6 +11,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
+import android.webkit.GeolocationPermissions;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
@@ -115,6 +116,12 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
      */
     public void setWebViewClient(WebViewClient webViewClient) {
       this.webViewClient = webViewClient;
+    }
+
+      @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+      callback.invoke(origin, true, false);
+      super.onGeolocationPermissionsShowPrompt(origin, callback);
     }
 
     @Override

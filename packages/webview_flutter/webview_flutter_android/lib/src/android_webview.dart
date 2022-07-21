@@ -344,8 +344,7 @@ class WebView {
       "Can't set a WebChromeClient without setting a WebViewClient first.",
     );
     await Future.wait(<Future<void>>[
-      if (client != null)
-        WebChromeClient.api.createFromInstance(client, _currentWebViewClient!),
+      if (client != null) WebChromeClient.api.createFromInstance(client, _currentWebViewClient!),
       api.setWebChromeClientFromInstance(this, client),
     ]);
   }
@@ -498,6 +497,13 @@ class WebSettings {
   /// The default is false.
   Future<void> setLoadWithOverviewMode(bool overview) {
     return api.setLoadWithOverviewModeFromInstance(this, overview);
+  }
+
+  /// Sets whether the WebView should support geolocation
+  ///
+  /// The default is false.
+  Future<void> setGeolocation(bool support) {
+    return api.setGeolocationEnabledFromInstance(this, support);
   }
 
   /// Sets whether the WebView should enable support for the "viewport" HTML meta tag or should use a wide viewport.
@@ -839,8 +845,7 @@ class FlutterAssetManager {
   Future<List<String?>> list(String path) => api.list(path);
 
   /// Gets the relative file path to the Flutter asset with the given name.
-  Future<String> getAssetFilePathByName(String name) =>
-      api.getAssetFilePathByName(name);
+  Future<String> getAssetFilePathByName(String name) => api.getAssetFilePathByName(name);
 }
 
 /// Manages the JavaScript storage APIs provided by the [WebView].

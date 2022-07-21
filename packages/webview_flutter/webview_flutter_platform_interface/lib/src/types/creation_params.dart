@@ -3,7 +3,10 @@
 // found in the LICENSE file.
 
 import 'package:flutter/widgets.dart';
-import 'package:webview_flutter_platform_interface/src/types/types.dart';
+import 'package:webview_pro_platform_interface/src/types/types.dart';
+
+import 'auto_media_playback_policy.dart';
+import 'web_settings.dart';
 
 /// Configuration to use when creating a new [WebViewPlatformController].
 ///
@@ -18,7 +21,8 @@ class CreationParams {
     this.webSettings,
     this.javascriptChannelNames = const <String>{},
     this.userAgent,
-    this.autoMediaPlaybackPolicy = AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
+    this.autoMediaPlaybackPolicy =
+        AutoMediaPlaybackPolicy.require_user_action_for_all_media_types,
     this.backgroundColor,
     this.cookies = const <WebViewCookie>[],
   }) : assert(autoMediaPlaybackPolicy != null);

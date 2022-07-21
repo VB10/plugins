@@ -5,13 +5,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:webview_flutter_android/src/android_webview.dart';
-import 'package:webview_flutter_android/src/android_webview.pigeon.dart';
-import 'package:webview_flutter_android/src/android_webview_api_impls.dart';
-import 'package:webview_flutter_android/src/instance_manager.dart';
+import 'package:webview_pro_android/src/android_webview.dart';
+import 'package:webview_pro_android/src/android_webview.pigeon.dart';
+import 'package:webview_pro_android/src/android_webview_api_impls.dart';
+import 'package:webview_pro_android/src/instance_manager.dart';
 
+import 'android_webview.pigeon.dart';
 import 'android_webview_test.mocks.dart';
-import 'test_android_webview.pigeon.dart';
 
 @GenerateMocks(<Type>[
   CookieManagerHostApi,
@@ -21,7 +21,6 @@ import 'test_android_webview.pigeon.dart';
   TestJavaScriptChannelHostApi,
   TestWebChromeClientHostApi,
   TestWebSettingsHostApi,
-  TestWebStorageHostApi,
   TestWebViewClientHostApi,
   TestWebViewHostApi,
   TestAssetManagerHostApi,
@@ -85,8 +84,8 @@ void main() {
         verify(mockPlatformHostApi.loadData(
           webViewInstanceId,
           'hello',
-          null,
-          null,
+          '<null-value>',
+          '<null-value>',
         ));
       });
 
@@ -113,11 +112,11 @@ void main() {
         webView.loadDataWithBaseUrl(data: 'hello');
         verify(mockPlatformHostApi.loadDataWithBaseUrl(
           webViewInstanceId,
-          null,
+          '<null-value>',
           'hello',
-          null,
-          null,
-          null,
+          '<null-value>',
+          '<null-value>',
+          '<null-value>',
         ));
       });
 
@@ -527,15 +526,14 @@ void main() {
         flutterApi.onReceivedRequestError(
           mockWebViewClientInstanceId,
           mockWebViewInstanceId,
-          WebResourceRequestData(
-            url: 'https://www.google.com',
-            isForMainFrame: true,
-            hasGesture: true,
-            method: 'POST',
-            isRedirect: false,
-            requestHeaders: <String?, String?>{},
-          ),
-          WebResourceErrorData(errorCode: 34, description: 'error description'),
+          WebResourceRequestData()
+            ..url = 'https://www.google.com'
+            ..isForMainFrame = true
+            ..hasGesture = true
+            ..method = 'POST',
+          WebResourceErrorData()
+            ..errorCode = 34
+            ..description = 'error description',
         );
 
         verify(mockWebViewClient.onReceivedRequestError(
@@ -566,14 +564,11 @@ void main() {
         flutterApi.requestLoading(
           mockWebViewClientInstanceId,
           mockWebViewInstanceId,
-          WebResourceRequestData(
-            url: 'https://www.google.com',
-            isForMainFrame: true,
-            hasGesture: true,
-            method: 'POST',
-            isRedirect: true,
-            requestHeaders: <String?, String?>{},
-          ),
+          WebResourceRequestData()
+            ..url = 'https://www.google.com'
+            ..isForMainFrame = true
+            ..hasGesture = true
+            ..method = 'POST',
         );
 
         verify(mockWebViewClient.requestLoading(
@@ -680,31 +675,6 @@ void main() {
           .thenAnswer((_) => Future<bool>.value(true));
       CookieManager.instance.clearCookies();
       verify(CookieManager.api.clearCookies());
-    });
-  });
-
-  group('WebStorage', () {
-    late MockTestWebStorageHostApi mockPlatformHostApi;
-
-    late WebStorage webStorage;
-    late int webStorageInstanceId;
-
-    setUp(() {
-      mockPlatformHostApi = MockTestWebStorageHostApi();
-      TestWebStorageHostApi.setup(mockPlatformHostApi);
-
-      webStorage = WebStorage();
-      webStorageInstanceId =
-          WebStorage.api.instanceManager.getInstanceId(webStorage)!;
-    });
-
-    test('create', () {
-      verify(mockPlatformHostApi.create(webStorageInstanceId));
-    });
-
-    test('deleteAllData', () {
-      webStorage.deleteAllData();
-      verify(mockPlatformHostApi.deleteAllData(webStorageInstanceId));
     });
   });
 }

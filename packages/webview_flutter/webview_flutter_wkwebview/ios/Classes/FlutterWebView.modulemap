@@ -5,6 +5,7 @@ framework module webview_flutter_wkwebview {
   module * { export * }
 
   explicit module Test {
-    header "FWFInstanceManager_Test.h"
+    header "FlutterWebView_Test.h"
+    header "FLTCookieManager_Test.h"
   }
 }

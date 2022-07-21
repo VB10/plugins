@@ -41,7 +41,8 @@ class WebWebViewPlatform implements WebViewPlatform {
         if (onWebViewPlatformCreated == null) {
           return;
         }
-        final IFrameElement element = document.getElementById('webview-$viewId')! as IFrameElement;
+        final IFrameElement element =
+            document.getElementById('webview-$viewId')! as IFrameElement;
         if (creationParams.initialUrl != null) {
           element.src = creationParams.initialUrl;
         }
@@ -178,7 +179,7 @@ class WebWebViewPlatformController implements WebViewPlatformController {
     String html, {
     String? baseUrl,
   }) async {
-    _element.src = 'data:text/html,${Uri.encodeFull(html)}';
+    _element.src = 'data:text/html,' + Uri.encodeFull(html);
   }
 
   @override
@@ -186,10 +187,15 @@ class WebWebViewPlatformController implements WebViewPlatformController {
     if (!request.uri.hasScheme) {
       throw ArgumentError('WebViewRequest#uri is required to have a scheme.');
     }
-    final HttpRequest httpReq = await _httpRequestFactory.request(request.uri.toString(),
-        method: request.method.serialize(), requestHeaders: request.headers, sendData: request.body);
-    final String contentType = httpReq.getResponseHeader('content-type') ?? 'text/html';
-    _element.src = 'data:$contentType,${Uri.encodeFull(httpReq.responseText ?? '')}';
+    final HttpRequest httpReq = await _httpRequestFactory.request(
+        request.uri.toString(),
+        method: request.method.serialize(),
+        requestHeaders: request.headers,
+        sendData: request.body);
+    final String contentType =
+        httpReq.getResponseHeader('content-type') ?? 'text/html';
+    _element.src =
+        'data:$contentType,' + Uri.encodeFull(httpReq.responseText ?? '');
   }
 
   @override
@@ -259,7 +265,7 @@ class HttpRequestFactory {
       String? mimeType,
       Map<String, String>? requestHeaders,
       dynamic sendData,
-      void Function(ProgressEvent e)? onProgress}) {
+      void onProgress(ProgressEvent e)?}) {
     return HttpRequest.request(url,
         method: method,
         withCredentials: withCredentials,

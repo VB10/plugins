@@ -8,10 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-import 'package:webview_flutter_wkwebview/src/web_kit_webview_widget.dart';
-
-import 'foundation/foundation.dart';
+import 'package:webview_pro_platform_interface/webview_flutter_platform_interface.dart';
 
 /// Builds an iOS webview.
 ///
@@ -28,24 +25,22 @@ class CupertinoWebView implements WebViewPlatform {
     WebViewPlatformCreatedCallback? onWebViewPlatformCreated,
     Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers,
   }) {
-    return WebKitWebViewWidget(
-      creationParams: creationParams,
-      callbacksHandler: webViewPlatformCallbacksHandler,
-      javascriptChannelRegistry: javascriptChannelRegistry,
-      onBuildWidget: (WebKitWebViewPlatformController controller) {
-        return UiKitView(
-          viewType: 'plugins.flutter.io/webview',
-          onPlatformViewCreated: (int id) {
-            if (onWebViewPlatformCreated != null) {
-              onWebViewPlatformCreated(controller);
-            }
-          },
-          gestureRecognizers: gestureRecognizers,
-          creationParams:
-              NSObject.globalInstanceManager.getIdentifier(controller.webView),
-          creationParamsCodec: const StandardMessageCodec(),
-        );
+    return UiKitView(
+      viewType: 'plugins.flutter.io/webview',
+      onPlatformViewCreated: (int id) {
+        if (onWebViewPlatformCreated == null) {
+          return;
+        }
+        onWebViewPlatformCreated(MethodChannelWebViewPlatform(
+          id,
+          webViewPlatformCallbacksHandler,
+          javascriptChannelRegistry,
+        ));
       },
+      gestureRecognizers: gestureRecognizers,
+      creationParams:
+          MethodChannelWebViewPlatform.creationParamsToMap(creationParams),
+      creationParamsCodec: const StandardMessageCodec(),
     );
   }
 

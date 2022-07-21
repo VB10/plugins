@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:webview_flutter_platform_interface/v4/src/types/webview_cookie.dart';
+import 'package:webview_pro_platform_interface/src/types/webview_cookie.dart';
 
 /// Interface for a platform implementation of a cookie manager.
 ///
@@ -27,7 +27,8 @@ abstract class WebViewCookieManagerPlatform extends PlatformInterface {
   /// class that extends [WebViewCookieManagerPlatform] when they register themselves.
   static set instance(WebViewCookieManagerPlatform? instance) {
     if (instance == null) {
-      throw AssertionError('Platform interfaces can only be set to a non-null instance');
+      throw AssertionError(
+          'Platform interfaces can only be set to a non-null instance');
     }
     PlatformInterface.verify(instance, _token);
     _instance = instance;
@@ -37,11 +38,13 @@ abstract class WebViewCookieManagerPlatform extends PlatformInterface {
   ///
   /// Returns true if cookies were present before clearing, else false.
   Future<bool> clearCookies() {
-    throw UnimplementedError('clearCookies is not implemented on the current platform');
+    throw UnimplementedError(
+        'clearCookies is not implemented on the current platform');
   }
 
   /// Sets a cookie for all [WebView] instances.
   Future<void> setCookie(WebViewCookie cookie) {
-    throw UnimplementedError('setCookie is not implemented on the current platform');
+    throw UnimplementedError(
+        'setCookie is not implemented on the current platform');
   }
 }

@@ -1,4 +1,4 @@
-# webview\_flutter\_wkwebview
+# webview_flutter_wkwebview
 
 The Apple WKWebView implementation of [`webview_flutter`][1].
 

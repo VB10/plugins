@@ -53,10 +53,8 @@ class AndroidWebView implements WebViewPlatform {
               }
             },
             gestureRecognizers: gestureRecognizers,
-            layoutDirection:
-                Directionality.maybeOf(context) ?? TextDirection.rtl,
-            creationParams:
-                InstanceManager.instance.getInstanceId(controller.webView),
+            layoutDirection: Directionality.maybeOf(context) ?? TextDirection.rtl,
+            creationParams: InstanceManager.instance.getInstanceId(controller.webView),
             creationParamsCodec: const StandardMessageCodec(),
           ),
         );

@@ -60,7 +60,7 @@ class WebSetting<T> {
   }
 
   @override
-  int get hashCode => Object.hash(_value, isPresent);
+  int get hashCode => hashValues(_value, isPresent);
 }
 
 /// Settings for configuring a WebViewPlatform.
@@ -82,8 +82,8 @@ class WebSettings {
     this.gestureNavigationEnabled,
     this.allowsInlineMediaPlayback,
     this.zoomEnabled,
-    required this.userAgent,
     this.geolocationEnabled,
+    required this.userAgent,
   }) : assert(userAgent != null);
 
   /// The JavaScript execution mode to be used by the webview.
@@ -129,6 +129,7 @@ class WebSettings {
 
   @override
   String toString() {
-    return 'WebSettings(javascriptMode: $javascriptMode, hasNavigationDelegate: $hasNavigationDelegate, hasProgressTracking: $hasProgressTracking, debuggingEnabled: $debuggingEnabled, gestureNavigationEnabled: $gestureNavigationEnabled, userAgent: $userAgent, allowsInlineMediaPlayback: $allowsInlineMediaPlayback)';
+    return 'WebSettings(javascriptMode: $javascriptMode, hasNavigationDelegate: $hasNavigationDelegate, hasProgressTracking: $hasProgressTracking, debuggingEnabled: $debuggingEnabled, '
+        'gestureNavigationEnabled: $gestureNavigationEnabled,geolocationEnabled: $geolocationEnabled,userAgent: $userAgent, allowsInlineMediaPlayback: $allowsInlineMediaPlayback)';
   }
 }

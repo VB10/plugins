@@ -8,10 +8,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_android_cookie_manager.dart';
-import 'package:webview_flutter_android/webview_surface_android.dart';
 import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 /// Optional callback invoked when a web view is first created. [controller] is
 /// the [WebViewController] for the created web view.
@@ -252,18 +251,18 @@ class WebView extends StatefulWidget {
   /// By default `debuggingEnabled` is false.
   final bool debuggingEnabled;
 
-  ///
-  /// This only works on Android.
-  ///
-  /// By default `geolocationEnabled` is false.
-  final bool geolocationEnabled;
-
   /// A Boolean value indicating whether horizontal swipe gestures will trigger back-forward list navigations.
   ///
   /// This only works on iOS.
   ///
   /// By default `gestureNavigationEnabled` is false.
   final bool gestureNavigationEnabled;
+
+  ///
+  /// This only works on Android.
+  ///
+  /// By default `geolocationEnabled` is false.
+  final bool geolocationEnabled;
 
   /// The value used for the HTTP User-Agent: request header.
   ///
@@ -381,8 +380,8 @@ WebSettings _webSettingsFromWidget(WebView widget) {
     hasProgressTracking: widget.onProgress != null,
     debuggingEnabled: widget.debuggingEnabled,
     gestureNavigationEnabled: widget.gestureNavigationEnabled,
-    geolocationEnabled: widget.geolocationEnabled,
     allowsInlineMediaPlayback: widget.allowsInlineMediaPlayback,
+    geolocationEnabled: widget.geolocationEnabled,
     userAgent: WebSetting<String?>.of(widget.userAgent),
     zoomEnabled: widget.zoomEnabled,
   );

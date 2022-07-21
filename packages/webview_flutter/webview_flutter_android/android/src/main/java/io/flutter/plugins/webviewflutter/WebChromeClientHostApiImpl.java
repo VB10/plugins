@@ -4,16 +4,20 @@
 
 package io.flutter.plugins.webviewflutter;
 
+import static io.flutter.plugins.webviewflutter.WebViewFlutterPlugin.application;
+
+import android.app.Application;
 import android.os.Build;
 import android.os.Message;
+import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
-import android.webkit.GeolocationPermissions;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.Size;
 import androidx.annotation.VisibleForTesting;
 import io.flutter.plugins.webviewflutter.GeneratedAndroidWebView.WebChromeClientHostApi;
 
@@ -42,15 +46,27 @@ import java.util.Map;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.app.ActivityCompat;
+
 /**
  * Host api implementation for {@link WebChromeClient}.
  *
  * <p>Handles creating {@link WebChromeClient}s that intercommunicate with a paired Dart object.
  */
 public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
+  private static final String TAG = "WebChromeClientHostApiI";
   private final InstanceManager instanceManager;
   private final WebChromeClientCreator webChromeClientCreator;
   private final WebChromeClientFlutterApiImpl flutterApi;
+
+  private static ValueCallback<Uri> uploadMessage;
+  private static ValueCallback<Uri[]> uploadMessageAboveL;
+  private final static int FILE_CHOOSER_RESULT_CODE = 10000;
+  public static final int RESULT_OK = -1;
+
+  private static final String[] perms = {Manifest.permission.CAMERA};
+  private static final int REQUEST_CAMERA = 1;
+
+  private static Uri cameraUri;
 
   /**
    * Implementation of {@link WebChromeClient} that passes arguments of callback methods to Dart.
@@ -133,6 +149,22 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
       }
     }
 
+    //For Android  >= 4.1
+    public void openFileChooser(ValueCallback<Uri> valueCallback, String acceptType, String capture) {
+      Log.v(TAG, "openFileChooser Android  >= 4.1");
+      uploadMessage = valueCallback;
+      takePhotoOrOpenGallery();
+    }
+
+    // For Android >= 5.0
+    @Override
+    public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+      Log.v(TAG, "openFileChooser Android >= 5.0");
+      uploadMessageAboveL = filePathCallback;
+      takePhotoOrOpenGallery();
+      return true;
+    }
+
     /**
      * Set the {@link WebViewClient} that calls to {@link WebChromeClient#onCreateWindow} are passed
      * to.
@@ -143,7 +175,7 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
       this.webViewClient = webViewClient;
     }
 
-      @Override
+    @Override
     public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
       callback.invoke(origin, true, false);
       super.onGeolocationPermissionsShowPrompt(origin, callback);
@@ -197,7 +229,8 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
         webChromeClientCreator.createWebChromeClient(flutterApi, webViewClient);
     instanceManager.addInstance(webChromeClient, instanceId);
   }
-   private static void openImageChooserActivity() {
+
+  private static void openImageChooserActivity() {
     Log.v(TAG, "openImageChooserActivity");
     if (WebViewFlutterPlugin.activity == null) {
       Log.v(TAG, "activity is null");
@@ -241,7 +274,7 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
                     }).show();
   }
 
-/**
+  /**
    * dialog监听类
    */
   private static class ReOnCancelListener implements DialogInterface.OnCancelListener {
@@ -259,7 +292,7 @@ public class WebChromeClientHostApiImpl implements WebChromeClientHostApi {
     }
   }
 
-   /**
+  /**
    * 打开照相机
    */
   private static void openCamera() {
